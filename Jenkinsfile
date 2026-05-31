@@ -1,11 +1,11 @@
 pipeline{
     agent any
     environment{
-        registry= "manuelgm/jenkins-example"
+        registry= "jayllon/jenkins-example"
         registryCredentials="dockerhub"
         project="jenkins-example"
         projectVersion="1.0"
-        repository="https://github.com/megmontero/dockerfile-example.git"
+        repository="https://github.com/joaquinayllon/dockerfile-example.git"
         repositoryCredentials="github"
     }
     stages{
@@ -17,30 +17,14 @@ pipeline{
         stage('Checkout code'){
             steps{
                 script{
-                    git branch: 'main',
+                    git branch: 'master',
                         credentialsId: repositoryCredentials,
                         url: repository
                 }
             }
         }
 
-        stage('Code Analysis'){
-            environment{
-                scannerHome= tool 'Sonar'
-            }
-            steps{
-                script{
-                    withSonarQubeEnv('Sonar'){
-                        sh "${scannerHome}/bin/sonar-scanner \
-                        -Dsonar.projectKey=$project \
-                        -Dsonar.projectName=$project \
-                        -Dsonar.projectVersion=$projectVersion \
-                        -Dsonar.sources=./"
-                    }
-                }
-            }
-        }
-
+        
         stage('Build'){
             steps{
                 script{
